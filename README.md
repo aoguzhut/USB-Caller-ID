@@ -64,13 +64,13 @@ Donanım
 
 Kullanılan DLL'ler
 - Projede kullanılan/bağlanan DLL'ler (varsa):
-	- `cidshow_x64/*.dll` ve/veya `cidshow_x86/*.dll` (referans için `old/pyCidshow` içeriğine bakın)
+	- `cidshow_x64/*.dll` veya `cidshow_x86/*.dll` gibi vendor DLL'leri
 	- Eğer özel SDK DLL'leri kullanıldıysa, örnek: `callerid_sdk.dll` (gerçek DLL adlarını buraya yazın)
 	- SDK ve DLL dokümantasyonu için: https://www.sistemler.com/sdk/
-Not: DLL'lerin platform ve mimariye göre (x86/x64) doğru klasöre konulduğundan emin olun.
+Not: DLL'ler genellikle üçüncü taraf veya vendor paketleri olup, bu repo içerisinde ikili DLL dosyaları bulunmaz. Gerekirse DLL'lerin nasıl temin edileceği README'de ayrıca açıklanır veya ilgili SDK sağlayıcısına başvurulur.
 
 Bilinen Hatalar ve Notlar
-- `old/captures/analysis_summary.txt` gibi analizlerde raporlanan bazı durumlarda, veritabanı veya CSV'deki `durum` sütunundaki değerlerin tutarsız olabileceği gözlemlenmiştir. Bu şu anlama gelir:
+- Proje ile ilgili yerel analiz özetleri veya ham yakalamalar (geliştiricinin yerel arşivlerinde saklanan dosyalar) üzerinde yapılan incelemelerde, veritabanı veya CSV'deki `durum` sütunundaki değerlerin tutarsız olabileceği gözlemlenmiştir. Bu şu anlama gelir:
 	- `durum` sütunu bazen eksik veya hatalı formatlı olabilir.
 	- Bu sütuna güvenen otomatik işleme/filtreleme adımları önce veri doğrulaması yapmalıdır.
 	- Öneri: `durum` alanını normalize eden bir doğrulama/adım ekleyin veya eksik/yanlış kayıtları gözden geçirecek bir manuel inceleme adımı bırakın.

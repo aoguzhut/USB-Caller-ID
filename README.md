@@ -46,3 +46,23 @@ Notlar
 
 Lisans
 - Bu depo için lisans belirtilmemiştir; eklemek isterseniz uygun lisans dosyasını (`LICENSE`) ekleyin.
+
+Donanım
+- Bu çalışma sırasında test ve geliştirme için kullanılan ana donanım:
+	- USB Caller ID alıcısı (model/marka: örn. "XYZ CID-100", lütfen gerçek modelinizi buraya yazın)
+	- Geliştirme: Windows 10/11 çalıştıran PC
+	- Opsiyonel: HID arayüzlü cihazlar ve USB bağlantısı
+
+Kullanılan DLL'ler
+- Projede kullanılan/bağlanan DLL'ler (varsa):
+	- cidshow_x64/*.dll ve/veya cidshow_x86/*.dll (referans için `old/pyCidshow` içeriğine bakın)
+	- Eğer özel SDK DLL'leri kullanıldıysa, örnek: callerid_sdk.dll (gerçek DLL adlarını buraya yazın)
+Not: DLL'lerin platform ve mimariye göre (x86/x64) doğru klasöre konulduğundan emin olun.
+
+Bilinen Hatalar ve Notlar
+- `old/captures/analysis_summary.txt` gibi analizlerde raporlanan bazı durumlarda, veritabanı veya CSV'deki `durum` sütunundaki değerlerin tutarsız olabileceği gözlemlenmiştir. Bu şu anlama gelir:
+	- `durum` sütunu bazen eksik veya hatalı formatlı olabilir.
+	- Bu sütuna güvenen otomatik işleme/filtreleme adımları önce veri doğrulaması yapmalıdır.
+	- Öneri: `durum` alanını normalize eden bir doğrulama/adım ekleyin veya eksik/yanlış kayıtları gözden geçirecek bir manuel inceleme adımı bırakın.
+
+Sorular veya düzeltmeler için lütfen `README.md` üzerinden güncelleme isteği gönderin veya doğrudan proje sahibine danışın.

@@ -40,22 +40,6 @@ pyinstaller server.spec
 pyinstaller client.spec
 ```
 
-Notlar
-- Hazır build çıktıları `build/` klasöründe bulunabilir; bu klasörü repoda takip etmiyorsanız `.gitignore` zaten ihmal eder.
-- Eski, referans amaçlı dosyalar `old/` klasöründe tutulmuştur.
-
-Depo Temizliği ve `.gitignore`
-- Repoda gereksiz ve kullanıcıya ait olmayan büyük/duyarlı dosyaların bulunmaması için aşağıdaki öğeler `.gitignore` ile hariç tutulmuştur:
-	- `old/` (eski referans dosyaları ve ham yakalamalar)
-	- `*.db` (lokal veritabanı/dump dosyaları)
-	- `dist/`, `build/` ve PyInstaller çıktıları
-- Amaç: GitHub üzerinde yalnızca proje kaynak kodunu tutmak ve kullanıcının ihtiyaç duymadığı derleme/çalıştırma artıkları veya hassas verilerin paylaşılmasını engellemektir.
-
-Eğer siz veya bir ekip üyesi `old/` içeriğine ihtiyaç duyarsa, ilgili dosyaları ayrı bir arşiv veya özel depoda saklamanızı öneririz.
-
-Lisans
-- Bu depo için lisans belirtilmemiştir; eklemek isterseniz uygun lisans dosyasını (`LICENSE`) ekleyin.
-
 Donanım
 - Bu çalışma sırasında test ve geliştirme için kullanılan ana donanım:
 	- USB Caller ID alıcısı (model/marka: C812A)
@@ -63,16 +47,13 @@ Donanım
 	- Opsiyonel: HID arayüzlü cihazlar ve USB bağlantısı
 
 Kullanılan DLL'ler
-- Projede kullanılan/bağlanan DLL'ler (varsa):
+- Projede kullanılan/bağlanan DLL'ler:
 	- `cidshow_x64/*.dll` veya `cidshow_x86/*.dll` gibi vendor DLL'leri
-	- Eğer özel SDK DLL'leri kullanıldıysa, örnek: `callerid_sdk.dll` (gerçek DLL adlarını buraya yazın)
 	- SDK ve DLL dokümantasyonu için: https://www.sistemler.com/sdk/
-Not: DLL'ler genellikle üçüncü taraf veya vendor paketleri olup, bu repo içerisinde ikili DLL dosyaları bulunmaz. 
-
+ 
 Bilinen Hatalar ve Notlar
-- Proje ile ilgili yerel analiz özetleri veya ham yakalamalar (geliştiricinin yerel arşivlerinde saklanan dosyalar) üzerinde yapılan incelemelerde, veritabanı veya CSV'deki `durum` sütunundaki değerlerin tutarsız olabileceği gözlemlenmiştir. Bu şu anlama gelir:
-	- `durum` sütunu bazen eksik veya hatalı formatlı olabilir.
+- Proje ile ilgili yerel analiz özetleri veya ham yakalamalar, veritabanı veya CSV'deki `durum` sütunundaki değerlerin tutarsız olabileceği gözlemlenmiştir. Bu şu anlama gelir:
+	- `durum` sütunu bazen eksik veya hatalı olabilir.
 	- Bu sütuna güvenen otomatik işleme/filtreleme adımları önce veri doğrulaması yapmalıdır.
-	- Öneri: `durum` alanını normalize eden bir doğrulama/adım ekleyin veya eksik/yanlış kayıtları gözden geçirecek bir manuel inceleme adımı bırakın.
 
 Sorular veya düzeltmeler için lütfen `README.md` üzerinden güncelleme isteği gönderin veya doğrudan proje sahibine danışın.

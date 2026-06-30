@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Santral - Çağrı Geçmişi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        /* AŞIRI KOMPAKT TABLO TASARIMI */
+        body { font-size: 0.85rem; background-color: #f8f9fa; }
+        .table-compact { margin-bottom: 0; }
+        .table-compact th, .table-compact td { 
+            padding: 0.2rem 0.4rem !important; 
+            vertical-align: middle; 
+            line-height: 1.2;
+        }
+        .badge { font-size: 0.7rem; padding: 0.3em 0.5em; }
+        .filter-number { cursor: pointer; color: #0d6efd; text-decoration: none; font-weight: 600; }
+        .filter-number:hover { text-decoration: underline; color: #0a58ca; }
+        
+        /* WhatsApp İkon Efektleri */
+        .wa-icon {
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .wa-icon:hover {
+            transform: scale(1.25);
+        }
+
+        .note-input { 
+            height: 1.6rem !important; 
+            font-size: 0.8rem !important; 
+            padding: 0.1rem 0.3rem !important; 
+            border-radius: 3px;
+            transition: all 0.3s ease; 
+            border-color: #dee2e6; 
+        }
+        .note-input:focus { border-color: #86b7fe; box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25); }
+        .save-success { border-color: #198754 !important; background-color: #d1e7dd !important; }
+        .blinking { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0.5; } }
+        
+        .navbar { padding: 0.4rem 1rem !important; }
+        .navbar-brand { font-size: 1.1rem !important; }
+        .compact-card { padding: 0.75rem !important; margin-bottom: 1rem !important; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark mb-3 shadow-sm">
+    <div class="container-fluid container">
+        <span class="navbar-brand mb-0 fw-bold">📞 Canlı Santral Paneli</span>
+        <a href="/logout" class="btn btn-sm btn-danger py-0 px-2">Çıkış Yap</a>
+    </div>
+</nav>
+
+<div class="container bg-white shadow-sm rounded compact-card">
+    
+    <div class="row mb-2 bg-light p-2 border rounded align-items-end mx-0">
+        <div class="col-md-3 ps-1">
+            <label class="form-label text-muted small fw-bold mb-1" style="font-size: 0.75rem;">Başlangıç Tarihi</label>
+            <input type="date" id="minDate" class="form-control form-control-sm">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label text-muted small fw-bold mb-1" style="font-size: 0.75rem;">Bitiş Tarihi</label>
+            <input type="date" id="maxDate" class="form-control form-control-sm">
+        </div>
+        <div class="col-md-6 text-end pe-1">
+            <button id="clearFilters" class="btn btn-sm btn-secondary">Aramayı Temizle</button>
+        </div>
+    </div>
+
+    <table id="cagriTablosu" class="table table-striped table-hover table-bordered table-compact w-100">
+        <thead class="table-dark text-center">
+            <tr>
+                <th width="6%">Sıra</th>
+                <th width="6%">Gun</th>
+                <th width="18%">Telefon Numarası</th>
+                <th width="14%">Zaman</th>
+                <th width="7%">Süre</th>
+                <th width="10%">Durum</th>
+                <th width="39%">Kullanıcı Notu</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            var min = $('#minDate').val();
+            var max = $('#maxDate').val();
+            var rowDate = data[3].substring(0, 10); 
+
+            if ((min === "" && max === "") ||
+                (min === "" && rowDate <= max) ||
+                (min <= rowDate && max === "") ||
+                (min <= rowDate && rowDate <= max)) {
+                return true;
+            }
+            return false;
+        });
+
+        var table = $('#cagriTablosu').DataTable({
+            "ajax": {
+                "url": "/api/gorusmeler",
+                "dataSrc": "data"
+            },
+            "columns": [
+                { "data": "genel_sira", "className": "text-center fw-bold text-muted" },
+                { "data": "gunluk_sira", "className": "text-center text-primary fw-bold" },
+                { 
+                    "data": "telefon_no", 
+                    "render": function(data, type, row) {
+                        if (type === 'filter') {
+                            return (row.raw_phone || "") + " " + (data || "");
+                        }
+                        
+                        let html = `<a href="#" class="filter-number" data-num="${row.raw_phone}" title="Numarayı süz">${data}</a>`;
+                        
+                        // WhatsApp Numarasını Hazırla (Format: 905XXXXXXXXX)
+                        let raw = row.raw_phone || "";
+                        let waNumber = raw;
+                        if (raw.startsWith('0')) {
+                            waNumber = '90' + raw.substring(1);
+                        }
+                        
+                        // WhatsApp Uygulamasını Doğrudan Tetikleyen Link (webden değil)
+                        if (waNumber.length >= 10) {
+                            html += `<a href="whatsapp://send?phone=${waNumber}" class="ms-2 d-inline-flex align-middle" title="WhatsApp Uygulaması ile Mesaj Gönder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#25D366" class="bi bi-whatsapp wa-icon" viewBox="0 0 16 16">
+                                  <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79 1.01h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.69-4.936c-.2-.1-1.191-.59-1.378-.658-.187-.068-.324-.1-.461.1-.137.2-.53.658-.65.795-.12.137-.24.153-.44.053-.2-.1-.84-.31-1.601-.986-.592-.529-.991-1.182-1.108-1.385-.117-.2-.013-.308.087-.407.09-.089.2-.233.3-.35.1-.117.133-.197.2-.33.067-.133.033-.252-.017-.353-.05-.1-462-.1.658-1.378-.135-.316-.27-.273-.372-.273-.1-.005-.214-.006-.324-.006-.11 0-.288.041-.439.206-.151.165-.577.564-.577 1.377s.593 1.597.675 1.706c.083.112 1.166 1.78 2.825 2.497.394.17.701.272.94.348.397.126.76.108 1.048.065.321-.048 1.192-.487 1.361-.958.17-.472.17-.876.12-.958-.05-.082-.188-.131-.388-.23"/>
+                                </svg>
+                            </a>`;
+                        }
+                        
+                        // Bugün tekrarlı aramalar için sayaç rozeti
+                        if (row.tekrar_sayisi > 1) {
+                            html += ` <span class="text-danger fw-bold ms-1" style="font-size:0.75rem;" title="Bugün ${row.tekrar_sayisi}. Arayışı">(${row.tekrar_sayisi})</span>`;
+                        }
+                        return html;
+                    }
+                },
+                { 
+                    "data": "baslangic_zamani",
+                    "render": function(data, type, row) {
+                        let html = data;
+                        if(row.bitis_zamani !== "-") {
+                            html += `<br><small class="text-muted" style="font-size:0.7rem;">Kapanış: ${row.bitis_zamani.substring(11)}</small>`;
+                        }
+                        return html;
+                    }
+                },
+                { 
+                    "data": "toplam_sure", 
+                    "className": "text-center",
+                    "render": function(data) { return data + " sn"; }
+                },
+                { 
+                    "data": "durum", 
+                    "className": "text-center",
+                    "render": function(data) {
+                        if (data === 'Cevaplandı') return '<span class="badge bg-success w-100">Cevaplandı</span>';
+                        if (data === 'Çalıyor/Aktif') return '<span class="badge bg-warning text-dark w-100 blinking">Çalıyor...</span>';
+                        return '<span class="badge bg-danger w-100">Cevapsız</span>';
+                    }
+                },
+                { 
+                    "data": "notlar",
+                    "render": function(data, type, row) {
+                        return `<input type="text" class="form-control form-control-sm note-input" data-id="${row.genel_sira}" value="${data}" placeholder="Not yazın...">`;
+                    }
+                }
+            ],
+            "order": [], 
+            "pageLength": 50,
+            "language": { "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json" }
+        });
+
+        var isTyping = false;
+        $('#cagriTablosu').on('focus', '.note-input', function() { isTyping = true; });
+        $('#cagriTablosu').on('blur', '.note-input', function() { isTyping = false; });
+
+        setInterval(function() {
+            if (!isTyping) table.ajax.reload(null, false); 
+        }, 2000); 
+
+        // Numaraya tıklayınca arama kutusuna direkt yazar ve filtreler
+        $('#cagriTablosu').on('click', '.filter-number', function(e) {
+            e.preventDefault();
+            var num = $(this).data('num');
+            $('.dataTables_filter input').val(num);
+            table.search(num).draw();
+        });
+
+        $('#minDate, #maxDate').on('change', function() { table.draw(); });
+
+        $('#clearFilters').on('click', function() {
+            $('#minDate').val('');
+            $('#maxDate').val('');
+            $('.dataTables_filter input').val('');
+            table.search('').columns().search('').draw();
+        });
+
+        $('#cagriTablosu').on('change', '.note-input', function() {
+            var inputField = $(this);
+            var rowId = inputField.data('id');
+            var noteVal = inputField.val();
+            
+            $.ajax({
+                url: '/update_note',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({id: rowId, note: noteVal}),
+                success: function(response) {
+                    if(response.status === 'success') {
+                        inputField.addClass('save-success');
+                        setTimeout(function() { inputField.removeClass('save-success'); }, 1500);
+                    }
+                }
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>

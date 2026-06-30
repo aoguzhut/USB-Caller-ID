@@ -67,7 +67,7 @@ Kullanılan DLL'ler
 	- `cidshow_x64/*.dll` veya `cidshow_x86/*.dll` gibi vendor DLL'leri
 	- Eğer özel SDK DLL'leri kullanıldıysa, örnek: `callerid_sdk.dll` (gerçek DLL adlarını buraya yazın)
 	- SDK ve DLL dokümantasyonu için: https://www.sistemler.com/sdk/
-Not: DLL'ler genellikle üçüncü taraf veya vendor paketleri olup, bu repo içerisinde ikili DLL dosyaları bulunmaz. Gerekirse DLL'lerin nasıl temin edileceği README'de ayrıca açıklanır veya ilgili SDK sağlayıcısına başvurulur.
+Not: DLL'ler genellikle üçüncü taraf veya vendor paketleri olup, bu repo içerisinde ikili DLL dosyaları bulunmaz. 
 
 Bilinen Hatalar ve Notlar
 - Proje ile ilgili yerel analiz özetleri veya ham yakalamalar (geliştiricinin yerel arşivlerinde saklanan dosyalar) üzerinde yapılan incelemelerde, veritabanı veya CSV'deki `durum` sütunundaki değerlerin tutarsız olabileceği gözlemlenmiştir. Bu şu anlama gelir:

@@ -49,14 +49,15 @@ Lisans
 
 Donanım
 - Bu çalışma sırasında test ve geliştirme için kullanılan ana donanım:
-	- USB Caller ID alıcısı (model/marka: örn. "XYZ CID-100", lütfen gerçek modelinizi buraya yazın)
+	- USB Caller ID alıcısı (model/marka: C812A)
 	- Geliştirme: Windows 10/11 çalıştıran PC
 	- Opsiyonel: HID arayüzlü cihazlar ve USB bağlantısı
 
 Kullanılan DLL'ler
 - Projede kullanılan/bağlanan DLL'ler (varsa):
-	- cidshow_x64/*.dll ve/veya cidshow_x86/*.dll (referans için `old/pyCidshow` içeriğine bakın)
-	- Eğer özel SDK DLL'leri kullanıldıysa, örnek: callerid_sdk.dll (gerçek DLL adlarını buraya yazın)
+	- `cidshow_x64/*.dll` ve/veya `cidshow_x86/*.dll` (referans için `old/pyCidshow` içeriğine bakın)
+	- Eğer özel SDK DLL'leri kullanıldıysa, örnek: `callerid_sdk.dll` (gerçek DLL adlarını buraya yazın)
+	- SDK ve DLL dokümantasyonu için: https://www.sistemler.com/sdk/
 Not: DLL'lerin platform ve mimariye göre (x86/x64) doğru klasöre konulduğundan emin olun.
 
 Bilinen Hatalar ve Notlar

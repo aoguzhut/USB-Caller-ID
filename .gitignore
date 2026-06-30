@@ -49,3 +49,17 @@ Thumbs.db
 
 # Local pyc bundles
 localpycs/
+
+# Old/reference data and captures
+old/
+
+# Database files
+*.db
+
+# Distribution artifacts and build outputs
+dist/
+build/
+
+# PyInstaller build folders
+build_client/
+build_server/

@@ -44,6 +44,15 @@ Notlar
 - Hazır build çıktıları `build/` klasöründe bulunabilir; bu klasörü repoda takip etmiyorsanız `.gitignore` zaten ihmal eder.
 - Eski, referans amaçlı dosyalar `old/` klasöründe tutulmuştur.
 
+Depo Temizliği ve `.gitignore`
+- Repoda gereksiz ve kullanıcıya ait olmayan büyük/duyarlı dosyaların bulunmaması için aşağıdaki öğeler `.gitignore` ile hariç tutulmuştur:
+	- `old/` (eski referans dosyaları ve ham yakalamalar)
+	- `*.db` (lokal veritabanı/dump dosyaları)
+	- `dist/`, `build/` ve PyInstaller çıktıları
+- Amaç: GitHub üzerinde yalnızca proje kaynak kodunu tutmak ve kullanıcının ihtiyaç duymadığı derleme/çalıştırma artıkları veya hassas verilerin paylaşılmasını engellemektir.
+
+Eğer siz veya bir ekip üyesi `old/` içeriğine ihtiyaç duyarsa, ilgili dosyaları ayrı bir arşiv veya özel depoda saklamanızı öneririz.
+
 Lisans
 - Bu depo için lisans belirtilmemiştir; eklemek isterseniz uygun lisans dosyasını (`LICENSE`) ekleyin.
 
